@@ -23,7 +23,7 @@ import (
 func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
-
+	//XD
 	//инициализация БД
 	//db, err := postgres.NewPostgresDB()
 	//if err != nil {
