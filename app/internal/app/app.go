@@ -36,6 +36,7 @@ func NewApp(ctx context.Context) (*App, error) {
 	}, nil
 }
 
+// Run method
 func (a *App) Run(ctx context.Context) error {
 	// /api/v1/
 	listener, err := net.Listen("tcp", ":4040")
