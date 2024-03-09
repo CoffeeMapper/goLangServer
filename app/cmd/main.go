@@ -8,13 +8,6 @@ import (
 	"time"
 )
 
-//Создать CRUD для таблицы с пользователей
-//GET /api/v1/users - получает всех пользователей
-//GET /api/v1/users/:id - получает пользователя по id
-//POST /api/v1/users - создает пользователя
-//PUT /api/v1/users/:id - редактирует данные пользователя по id
-//DELETE /api/v1/users/:id - удаляет пользователя по id
-
 // GET /api/v1/coffee - получает всех кофейнь
 // GET /api/v1/coffee/:id - получает кофейню по id
 // POST /api/v1/coffee - создает кофейню

@@ -4,8 +4,8 @@ import (
 	"CoffeMapper/app/api/routes"
 	"CoffeMapper/app/pkg/postgres"
 	"context"
+	"database/sql"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"log"
 	"net"
 	"net/http"
@@ -14,16 +14,19 @@ import (
 type App struct {
 	router     *gin.Engine
 	httpServer *http.Server
-	pgClient   *postgres.PostgresDB
+	pgClient   *sql.DB
 }
 
 func NewApp(ctx context.Context) (*App, error) {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	//err := godotenv.Load(".env")
+	//if err != nil {
+	//	log.Fatal("Error loading .env file")
+	//}
 
 	db, err := postgres.NewPostgresDB()
+	if err != nil {
+		log.Fatal("NewPostgresDB")
+	}
 
 	routers := routes.InitRoutes(db)
 
@@ -34,7 +37,8 @@ func NewApp(ctx context.Context) (*App, error) {
 }
 
 func (a *App) Run(ctx context.Context) error {
-	listener, err := net.Listen("tcp", ":4040/api/v1/")
+	// /api/v1/
+	listener, err := net.Listen("tcp", ":4040")
 	if err != nil {
 		log.Fatalf("Run error: %v", err)
 	}
