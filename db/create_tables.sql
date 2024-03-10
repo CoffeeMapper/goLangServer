@@ -1,5 +1,5 @@
 CREATE TABLE coffee_point (
-                             coffee_point_id int PRIMARY KEY,
+                             coffee_point_id SERIAL PRIMARY KEY,
                              logo varchar,
                              description varchar,
                              address varchar,
@@ -12,14 +12,14 @@ CREATE TABLE coffee_point (
 );
 
 CREATE TABLE brand (
-                       brand_id int PRIMARY KEY,
+                       brand_id SERIAL PRIMARY KEY,
                        name varchar,
                        owner_id int,
                        phone varchar
 );
 
 CREATE TABLE users (
-                       user_id int PRIMARY KEY,
+                       user_id SERIAL PRIMARY KEY,
                        login varchar,
                        email varchar,
                        password varchar,
@@ -32,7 +32,7 @@ CREATE TABLE menu (
 );
 
 CREATE TABLE product (
-                         product_id int PRIMARY KEY,
+                         product_id SERIAL PRIMARY KEY,
                          category_id int,
                          title varchar,
                          picture varchar,
@@ -41,13 +41,13 @@ CREATE TABLE product (
 );
 
 CREATE TABLE category (
-                          category_id int PRIMARY KEY,
+                          category_id SERIAL PRIMARY KEY,
                           title varchar,
                           description varchar
 );
 
 CREATE TABLE feedback (
-                          feedback_id int PRIMARY KEY,
+                          feedback_id SERIAL PRIMARY KEY,
                           user_id int,
                           feedback varchar,
                           rate int
@@ -55,7 +55,7 @@ CREATE TABLE feedback (
 
 
 CREATE TABLE order (
-                       order_id int PRIMARY KEY,
+                       order_id SERIAL PRIMARY KEY,
                        product_id int,
                        started_at timestamp,
                        will_done_at timestamp,
@@ -63,7 +63,7 @@ CREATE TABLE order (
 );
 
 CREATE TABLE combo (
-                       combo_id int PRIMARY KEY,
+                       combo_id SERIAL PRIMARY KEY,
                        title int,
                        price int,
                        product_id int

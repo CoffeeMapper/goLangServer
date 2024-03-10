@@ -15,17 +15,17 @@ type Config struct {
 	SSLMode  string
 }
 
-type PostgresDB struct {
-	db *sql.DB
-}
+//type PostgresDB struct {
+//	db *sql.DB
+//}
 
-func NewPostgresDB() (*PostgresDB, error) {
+func NewPostgresDB() (*sql.DB, error) {
 	cfg := &Config{
 		Host:     "localhost",
-		Port:     "5415",
+		Port:     "5440",
 		Username: "postgres",
 		Password: "secret",
-		DBName:   "coffeemapper",
+		DBName:   "coffemapper",
 		SSLMode:  "disable",
 	}
 
@@ -40,7 +40,5 @@ func NewPostgresDB() (*PostgresDB, error) {
 		return nil, err
 	}
 
-	d := &PostgresDB{db: db}
-
-	return d, nil
+	return db, nil
 }
