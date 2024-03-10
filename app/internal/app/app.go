@@ -18,6 +18,7 @@ type App struct {
 }
 
 func NewApp(ctx context.Context) (*App, error) {
+	//Раскомментирую позже, нужный функционал для загрузки переменных окружения.
 	//err := godotenv.Load(".env")
 	//if err != nil {
 	//	log.Fatal("Error loading .env file")
