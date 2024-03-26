@@ -59,7 +59,7 @@ CREATE TABLE order (
                        product_id int,
                        started_at timestamp,
                        will_done_at timestamp,
-                       status bool
+                       status boolean
 );
 
 CREATE TABLE combo (
