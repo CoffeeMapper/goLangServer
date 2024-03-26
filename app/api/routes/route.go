@@ -9,11 +9,13 @@ import (
 	"net/http"
 )
 
-//GET /api/v1/coffee - получает всех кофейнь
-//GET /api/v1/coffee/:id - получает кофейню по id
-//POST /api/v1/coffee - создает кофейню
-//PUT /api/v1/coffee/:id - редактирует данные кофейни по id
-//DELETE /api/v1/coffee/:id - удаляет кофейню по id
+//Создать CRUD для таблицы с брэндами
+//
+//GET /api/v1/brand- получает все брэнды
+//GET /api/v1/brand/:id - получает брэнды по id
+//POST /api/v1/brand- создает брэнды
+//PUT /api/v1/brand/:id - редактирует данные брэнда по id
+//DELETE /api/v1/brand/:id - удаляет брэнды по id
 
 //Создать CRUD для таблицы с пользователей
 //GET /api/v1/users - получает всех пользователей
@@ -26,6 +28,11 @@ func InitRoutes(db *sql.DB) *gin.Engine {
 	router := gin.Default()
 	ctx := context.Background()
 
+	//CRUD -
+	//CREATE - POST
+	//READ - GET
+	//UPDATE - PUT
+	//DELETE - DELETE
 	api := router.Group("/api/v1")
 	{
 		users := api.Group("/users")
@@ -97,11 +104,60 @@ func InitRoutes(db *sql.DB) *gin.Engine {
 
 		brand := api.Group("/brand")
 		{
-			brand.GET("/")
-			brand.GET("/:id")
-			brand.POST("/")
-			brand.PUT("/:id")
-			brand.DELETE("/:id")
+			brand.GET("/", func(c *gin.Context) {
+				brands, err := controller.GetAllBrands(ctx, db)
+				if err != nil {
+					return
+				}
+
+				c.JSON(200, brands)
+			})
+			brand.GET("/:id", func(c *gin.Context) {
+				brandID := c.Param("id")
+				brand, err := controller.GetBrandById(ctx, db, brandID)
+				if err != nil {
+					c.JSON(404, gin.H{"user not found": "nope"})
+					return
+				}
+				c.JSON(200, brand)
+			})
+			brand.POST("/", func(c *gin.Context) {
+				var b controller.Brand
+				err := c.BindJSON(&b)
+				if err != nil {
+					c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid brand data"})
+					return
+				}
+
+				err = controller.CreateBrand(db, &b)
+				if err != nil {
+					c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+					return
+				}
+
+				c.JSON(http.StatusCreated, gin.H{"id": b.BrandId})
+			})
+			brand.PUT("/:id", func(c *gin.Context) {
+				brandID := c.Param("id")
+				var brand *controller.Brand
+				err := c.BindJSON(&brand)
+				fmt.Println(brand)
+				if err != nil {
+					return
+				}
+
+				//brand не нужен
+				newBrand, err := controller.UpdateBrand(db, brand, brandID)
+				c.JSON(200, gin.H{"newUser": newBrand})
+			})
+			brand.DELETE("/:id", func(c *gin.Context) {
+				brandID := c.Param("id")
+				err := controller.DeleteBrand(db, brandID)
+				if err != nil {
+					return
+				}
+				c.Status(http.StatusNoContent)
+			})
 		}
 	}
 
