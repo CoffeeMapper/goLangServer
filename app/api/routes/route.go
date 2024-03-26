@@ -93,13 +93,62 @@ func InitRoutes(db *sql.DB) *gin.Engine {
 			})
 		}
 
-		coffee := api.Group("/coffee")
+		coffee := api.Group("/coffeepoint")
 		{
-			coffee.GET("/")
-			coffee.GET("/:id")
-			coffee.POST("/")
-			coffee.PUT("/:id")
-			coffee.DELETE("/:id")
+			coffee.GET("/", func(c *gin.Context) {
+				cps, err := controller.GetAllCoffeePoint(ctx, db)
+				if err != nil {
+					return
+				}
+
+				c.JSON(200, cps)
+			})
+			coffee.GET("/:id", func(c *gin.Context) {
+				cpID := c.Param("id")
+				cp, err := controller.GetCoffeePointById(ctx, db, cpID)
+				if err != nil {
+					c.JSON(404, gin.H{"user not found": "nope"})
+					return
+				}
+				c.JSON(200, cp)
+			})
+			coffee.POST("/", func(c *gin.Context) {
+				var cp controller.CoffeePoint
+				err := c.BindJSON(&cp)
+				if err != nil {
+					c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid user data"})
+					return
+				}
+
+				err = controller.CreateCoffeePoint(db, &cp)
+				if err != nil {
+					c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+					return
+				}
+
+				c.JSON(http.StatusCreated, gin.H{"id": cp.CoffeePointId})
+			})
+			coffee.PUT("/:id", func(c *gin.Context) {
+				cpID := c.Param("id")
+				var cp *controller.CoffeePoint
+				err := c.BindJSON(&cp)
+				fmt.Println(cp)
+				if err != nil {
+					return
+				}
+
+				//user не нужен
+				newUser, err := controller.UpdateCoffeePoint(db, cp, cpID)
+				c.JSON(200, gin.H{"newUser": newUser})
+			})
+			coffee.DELETE("/:id", func(c *gin.Context) {
+				cpID := c.Param("id")
+				err := controller.DeleteUser(db, cpID)
+				if err != nil {
+					return
+				}
+				c.Status(http.StatusNoContent)
+			})
 		}
 
 		brand := api.Group("/brand")
