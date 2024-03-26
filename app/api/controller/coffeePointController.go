@@ -20,6 +20,7 @@ type CoffeePoint struct {
 	FeedbackId    int    `json:"feedback_id"`
 }
 
+// coffee_point
 func GetAllCoffeePoint(ctx context.Context, db *sql.DB) ([]CoffeePoint, error) {
 	rows, err := db.QueryContext(ctx, "SELECT * FROM coffee_point")
 	if err != nil {

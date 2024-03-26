@@ -114,12 +114,14 @@ func InitRoutes(db *sql.DB) *gin.Engine {
 			})
 			coffee.POST("/", func(c *gin.Context) {
 				var cp controller.CoffeePoint
+				//Получаем данные из запроса
 				err := c.BindJSON(&cp)
 				if err != nil {
 					c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "Invalid user data"})
 					return
 				}
 
+				//Передаём данные переменной для дальнейшей работы с БД
 				err = controller.CreateCoffeePoint(db, &cp)
 				if err != nil {
 					c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -143,7 +145,7 @@ func InitRoutes(db *sql.DB) *gin.Engine {
 			})
 			coffee.DELETE("/:id", func(c *gin.Context) {
 				cpID := c.Param("id")
-				err := controller.DeleteUser(db, cpID)
+				err := controller.DeleteCoffeePoint(db, cpID)
 				if err != nil {
 					return
 				}
